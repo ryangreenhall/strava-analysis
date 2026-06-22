@@ -34,6 +34,18 @@ export function renderOverviewPage(overview: RunningOverview): string {
         </article>
 
         <article class="metric-card">
+          <span>Fastest 5K</span>
+          <strong>${overview.fastest5k ? formatDuration(overview.fastest5k.estimatedSeconds) : "n/a"}</strong>
+          <small>${overview.fastest5k ? `${formatDate(overview.fastest5k.activity.startTime)} · estimated from activity pace` : "No qualifying run yet"}</small>
+        </article>
+
+        <article class="metric-card">
+          <span>Fastest 10K</span>
+          <strong>${overview.fastest10k ? formatDuration(overview.fastest10k.estimatedSeconds) : "n/a"}</strong>
+          <small>${overview.fastest10k ? `${formatDate(overview.fastest10k.activity.startTime)} · estimated from activity pace` : "No qualifying run yet"}</small>
+        </article>
+
+        <article class="metric-card">
           <span>Total miles run</span>
           <strong>${overview.totalMilesRun.toFixed(1)}</strong>
           <small>Across ${overview.activityCount} imported runs</small>
@@ -84,6 +96,18 @@ function formatDate(date: Date): string {
     month: "short",
     day: "numeric"
   });
+}
+
+function formatDuration(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = Math.round(totalSeconds % 60).toString().padStart(2, "0");
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds}`;
+  }
+
+  return `${minutes}:${seconds}`;
 }
 
 function escapeHtml(value: string): string {

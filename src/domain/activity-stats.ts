@@ -2,9 +2,21 @@ import type { Activity } from "./activity.ts";
 import { metersToMiles } from "./distance.ts";
 
 const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const fiveKilometersMeters = 5000;
+const tenKilometersMeters = 10000;
+const fastestReasonableSecondsPerKilometer = 120;
+const slowestReasonableSecondsPerKilometer = 900;
+
+export type EstimatedBestEffort = {
+  activity: Activity;
+  distanceMeters: number;
+  estimatedSeconds: number;
+};
 
 export type RunningOverview = {
   longestRun?: Activity;
+  fastest5k?: EstimatedBestEffort;
+  fastest10k?: EstimatedBestEffort;
   mostPopularDay?: {
     day: string;
     count: number;
@@ -49,10 +61,30 @@ export function calculateRunningOverview(activities: Activity[]): RunningOvervie
 
   return {
     longestRun,
+    fastest5k: findFastestEstimatedEffort(runs, fiveKilometersMeters),
+    fastest10k: findFastestEstimatedEffort(runs, tenKilometersMeters),
     mostPopularDay: popularDayEntry ? { day: weekdays[popularDayEntry[0]], count: popularDayEntry[1] } : undefined,
     annualDistance,
     totalMilesRun: metersToMiles(totalDistanceMeters),
     yearsOfActivity: years.size,
     activityCount: runs.length
   };
+}
+
+function findFastestEstimatedEffort(runs: Activity[], distanceMeters: number): EstimatedBestEffort | undefined {
+  return runs
+    .filter((activity) => activity.distanceMeters >= distanceMeters && hasReasonableAveragePace(activity))
+    .map((activity) => ({
+      activity,
+      distanceMeters,
+      estimatedSeconds: Math.round(activity.movingSeconds * distanceMeters / activity.distanceMeters)
+    }))
+    .sort((a, b) => a.estimatedSeconds - b.estimatedSeconds)[0];
+}
+
+function hasReasonableAveragePace(activity: Activity): boolean {
+  if (activity.movingSeconds <= 0 || activity.distanceMeters <= 0) return false;
+  const secondsPerKilometer = activity.movingSeconds / (activity.distanceMeters / 1000);
+  return secondsPerKilometer >= fastestReasonableSecondsPerKilometer
+    && secondsPerKilometer <= slowestReasonableSecondsPerKilometer;
 }
