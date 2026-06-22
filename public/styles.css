@@ -63,6 +63,17 @@ h1 {
   gap: 16px;
 }
 
+.section-heading {
+  margin-bottom: 18px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
 .metric-card {
   min-height: 182px;
   padding: 20px;
@@ -102,9 +113,84 @@ h1 {
   line-height: 1.45;
 }
 
+.chart-panel {
+  margin-top: 18px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.bar-chart {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  align-items: end;
+  gap: 10px;
+  min-height: 360px;
+  padding-top: 8px;
+}
+
+.bar-item {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: 28px 260px 24px;
+  gap: 8px;
+}
+
+.bar-value,
+.bar-label {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar-value {
+  align-self: end;
+  color: var(--ink);
+}
+
+.bar-track {
+  position: relative;
+  align-self: stretch;
+  overflow: hidden;
+  border: 1px solid #e2e5df;
+  border-radius: 8px;
+  background: #f4f5ef;
+}
+
+.bar-fill {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  min-height: 4px;
+  border-radius: 7px 7px 0 0;
+  background: linear-gradient(180deg, var(--accent) 0%, #c13b05 100%);
+}
+
+.empty-copy {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 @media (max-width: 900px) {
   .summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bar-chart {
+    grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
+    min-height: 320px;
+  }
+
+  .bar-item {
+    grid-template-rows: 28px 220px 24px;
   }
 }
 
