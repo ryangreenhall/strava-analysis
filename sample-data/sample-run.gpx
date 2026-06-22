@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="strava-analysis">
+  <metadata>
+    <name>Sample Richmond Park Run</name>
+  </metadata>
+  <trk>
+    <name>Sample Richmond Park Run</name>
+    <type>running</type>
+    <trkseg>
+      <trkpt lat="51.4421" lon="-0.2742">
+        <ele>20</ele>
+        <time>2025-06-01T08:00:00Z</time>
+      </trkpt>
+      <trkpt lat="51.4445" lon="-0.2685">
+        <ele>34</ele>
+        <time>2025-06-01T08:06:00Z</time>
+      </trkpt>
+      <trkpt lat="51.4487" lon="-0.2618">
+        <ele>41</ele>
+        <time>2025-06-01T08:14:00Z</time>
+      </trkpt>
+      <trkpt lat="51.4512" lon="-0.2536">
+        <ele>30</ele>
+        <time>2025-06-01T08:22:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

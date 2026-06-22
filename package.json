@@ -5,8 +5,10 @@
   "description": "A local web app for analysing and presenting Strava running data.",
   "type": "module",
   "scripts": {
-    "dev": "python3 -m http.server 5173",
-    "start": "python3 -m http.server 5173"
+    "dev": "node src/presentation/http/server.ts",
+    "start": "node src/presentation/http/server.ts",
+    "migrate": "node src/cli/migrate.ts",
+    "import:gpx": "node src/cli/import-gpx.ts"
   },
   "keywords": [
     "strava",
@@ -14,6 +16,6 @@
     "analysis",
     "dashboard"
   ],
-  "author": "",
+  "author": "ryangreenhall",
   "license": "UNLICENSED"
 }

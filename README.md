@@ -1,33 +1,47 @@
 # Strava Analysis
 
-A local browser dashboard for analysing and presenting Strava running data.
+A local TypeScript app for importing GPX running data, storing it in SQLite, and presenting a compact running overview.
 
-## Run it
+The code is organised in a hexagonal style:
+
+- `src/domain`: activity model, distance calculations, and statistics
+- `src/application`: use cases and ports
+- `src/infrastructure`: SQLite and GPX URL adapters
+- `src/presentation`: MVC HTTP controller and view
+- `src/cli`: command-line entry points
+
+## Requirements
+
+- Node.js 24+
+- SQLite CLI (`sqlite3`)
+
+This project intentionally avoids npm dependencies for now.
+
+## Run migrations
 
 ```bash
-cd /Users/ryangreenhall/Documents/code/strava-analysis
-npm run dev
+node src/cli/migrate.ts
 ```
 
-Open `http://localhost:5173`.
+## Import a GPX file from a URL
 
-## Import data
+```bash
+node src/cli/import-gpx.ts https://example.com/my-run.gpx
+```
 
-Use the Strava activities CSV export. The app recognises common columns including:
+The importer downloads the GPX file, calculates distance from track points, estimates moving time from the first and last timestamps, calculates elevation gain, and stores the activity in `data/strava-analysis.sqlite`.
 
-- `Activity Date`
-- `Activity Name`
-- `Activity Type`
-- `Distance`
-- `Moving Time`
-- `Elevation Gain`
+## Run the web page
 
-It also accepts JSON arrays with equivalent fields. Distances under `500` are treated as kilometres, while larger distance values are treated as metres.
+```bash
+node src/presentation/http/server.ts
+```
 
-## What it shows
+Open `http://127.0.0.1:5173`.
 
-- Total runs, distance, moving time, and weighted average pace
-- Monthly trend chart for distance, moving time, or elevation
-- Run distance distribution
-- Longest runs table
-- A short narrative summary for presenting the training block
+The page shows:
+
+- Longest run, with date and location
+- Most popular day of the week
+- Total miles run
+- Number of years of activity
