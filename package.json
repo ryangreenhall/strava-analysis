@@ -1,0 +1,19 @@
+{
+  "name": "strava-analysis",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A local web app for analysing and presenting Strava running data.",
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "start": "python3 -m http.server 5173"
+  },
+  "keywords": [
+    "strava",
+    "running",
+    "analysis",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "UNLICENSED"
+}

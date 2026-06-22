@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strava Running Analysis</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace">
+        <aside class="control-panel" aria-label="Data controls">
+          <div class="brand-block">
+            <p class="eyebrow">Strava Analysis</p>
+            <h1>Running data, without the spreadsheet fog.</h1>
+          </div>
+
+          <label class="upload-zone" for="fileInput">
+            <input id="fileInput" type="file" accept=".csv,.json,application/json,text/csv" />
+            <span class="upload-icon" aria-hidden="true">↑</span>
+            <span class="upload-title">Import activities</span>
+            <span class="upload-copy">Use your Strava activities CSV export, or a JSON array of activities.</span>
+          </label>
+
+          <button class="secondary-action" id="loadSample" type="button">Load sample data</button>
+
+          <div class="filters" aria-label="Dashboard filters">
+            <label>
+              <span>Year</span>
+              <select id="yearFilter"></select>
+            </label>
+
+            <label>
+              <span>Metric</span>
+              <select id="metricFilter">
+                <option value="distance">Distance</option>
+                <option value="time">Moving time</option>
+                <option value="elevation">Elevation</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="insight-card">
+            <p class="eyebrow">Presentation note</p>
+            <p id="summaryNarrative">Load activities to generate a concise story about your training.</p>
+          </div>
+        </aside>
+
+        <section class="dashboard" aria-label="Running analysis dashboard">
+          <header class="dashboard-header">
+            <div>
+              <p class="eyebrow">Dashboard</p>
+              <h2 id="dashboardTitle">Ready for your runs</h2>
+            </div>
+            <div class="status-pill" id="dataStatus">No data loaded</div>
+          </header>
+
+          <section class="metric-grid" id="metricGrid" aria-label="Summary metrics"></section>
+
+          <section class="chart-grid">
+            <article class="panel panel-large">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Trend</p>
+                  <h3 id="trendTitle">Monthly distance</h3>
+                </div>
+              </div>
+              <canvas id="trendChart" width="900" height="360" aria-label="Monthly trend chart"></canvas>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Distribution</p>
+                  <h3>Run distances</h3>
+                </div>
+              </div>
+              <canvas id="distributionChart" width="460" height="360" aria-label="Run distance distribution chart"></canvas>
+            </article>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading table-heading">
+              <div>
+                <p class="eyebrow">Highlights</p>
+                <h3>Longest runs</h3>
+              </div>
+              <span id="activityCount">0 activities</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Run</th>
+                    <th>Date</th>
+                    <th>Distance</th>
+                    <th>Pace</th>
+                    <th>Elevation</th>
+                  </tr>
+                </thead>
+                <tbody id="activityTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
