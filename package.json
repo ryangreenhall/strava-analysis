@@ -8,7 +8,8 @@
     "dev": "node src/presentation/http/server.ts",
     "start": "node src/presentation/http/server.ts",
     "migrate": "node src/cli/migrate.ts",
-    "import:gpx": "node src/cli/import-gpx.ts"
+    "import:gpx": "node src/cli/import-gpx.ts",
+    "import:strava-csv": "node src/cli/import-strava-activities-csv.ts"
   },
   "keywords": [
     "strava",

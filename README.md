@@ -31,6 +31,14 @@ node src/cli/import-gpx.ts https://example.com/my-run.gpx
 
 The importer downloads the GPX file, calculates distance from track points, estimates moving time from the first and last timestamps, calculates elevation gain, and stores the activity in `data/strava-analysis.sqlite`.
 
+## Import Strava bulk export activities
+
+```bash
+node src/cli/import-strava-activities-csv.ts /Users/ryangreenhall/Documents/data/strava-export/activities.csv
+```
+
+This imports rows where `Activity Type` is `Run`. The Strava bulk export does not include location names in `activities.csv`, so imported CSV rows use `Location unavailable in activities.csv`.
+
 ## Run the web page
 
 ```bash

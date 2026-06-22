@@ -27,7 +27,24 @@ export class SqliteActivityRepository implements ActivityRepository {
   }
 
   async save(activity: Activity): Promise<void> {
-    const sql = `
+    runSqlite(this.databasePath, upsertActivitySql(activity));
+  }
+
+  async saveMany(activities: Activity[]): Promise<void> {
+    if (activities.length === 0) return;
+    const statements = activities.map(upsertActivitySql).join("\n");
+    runSqlite(this.databasePath, `BEGIN;\n${statements}\nCOMMIT;`);
+  }
+
+  async findAllRuns(): Promise<Activity[]> {
+    const output = runSqlite(this.databasePath, "SELECT * FROM activities WHERE activity_type = 'run' ORDER BY start_time ASC;", ["-json"]);
+    const rows = JSON.parse(output || "[]") as ActivityRow[];
+    return rows.map(rowToActivity);
+  }
+}
+
+function upsertActivitySql(activity: Activity): string {
+  return `
       INSERT INTO activities (
         id, source_url, name, activity_type, start_time, end_time, location,
         start_lat, start_lon, end_lat, end_lon, distance_meters, moving_seconds, elevation_gain_meters
@@ -62,15 +79,6 @@ export class SqliteActivityRepository implements ActivityRepository {
         moving_seconds = excluded.moving_seconds,
         elevation_gain_meters = excluded.elevation_gain_meters;
     `;
-
-    runSqlite(this.databasePath, sql);
-  }
-
-  async findAllRuns(): Promise<Activity[]> {
-    const output = runSqlite(this.databasePath, "SELECT * FROM activities WHERE activity_type = 'run' ORDER BY start_time ASC;", ["-json"]);
-    const rows = JSON.parse(output || "[]") as ActivityRow[];
-    return rows.map(rowToActivity);
-  }
 }
 
 function rowToActivity(row: ActivityRow): Activity {
