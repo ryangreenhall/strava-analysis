@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
 import { createActivity, type Activity } from "../../domain/activity.ts";
 
 type CsvRow = Record<string, string[]>;
@@ -16,7 +17,7 @@ export class StravaActivitiesCsvReader {
     let skippedRows = 0;
 
     for (const row of rows) {
-      const activity = rowToActivity(row, filePath);
+      const activity = await rowToActivity(row, filePath);
       if (activity) {
         activities.push(activity);
       } else {
@@ -28,7 +29,7 @@ export class StravaActivitiesCsvReader {
   }
 }
 
-function rowToActivity(row: CsvRow, sourcePath: string): Activity | undefined {
+async function rowToActivity(row: CsvRow, sourcePath: string): Promise<Activity | undefined> {
   const activityType = firstValue(row, "Activity Type", "Type");
   if (activityType.toLowerCase() !== "run") return undefined;
 
@@ -37,19 +38,66 @@ function rowToActivity(row: CsvRow, sourcePath: string): Activity | undefined {
   const distanceMeters = parseDistanceMeters(row);
 
   if (!id || !startTime || distanceMeters <= 0) return undefined;
+  const gpxMetadata = await readReferencedGpx(row, sourcePath);
 
   return createActivity({
     id,
-    sourceUrl: sourcePath,
+    sourceUrl: gpxMetadata?.filePath ?? sourcePath,
     name: firstValue(row, "Activity Name") || "Strava run",
     activityType: "run",
     startTime,
     endTime: undefined,
-    location: "Location unavailable in activities.csv",
+    location: gpxMetadata?.location ?? "Location unavailable in activities.csv",
+    startPoint: gpxMetadata?.startPoint,
+    endPoint: gpxMetadata?.endPoint,
     distanceMeters,
     movingSeconds: Math.round(parseNumber(firstValue(row, "Moving Time", "Elapsed Time"))),
     elevationGainMeters: parseNumber(firstValue(row, "Elevation Gain"))
   });
+}
+
+async function readReferencedGpx(row: CsvRow, sourcePath: string): Promise<{
+  filePath: string;
+  location: string;
+  startPoint: { latitude: number; longitude: number };
+  endPoint?: { latitude: number; longitude: number };
+} | undefined> {
+  const filename = firstValue(row, "Filename");
+  if (!filename.toLowerCase().endsWith(".gpx")) return undefined;
+
+  const filePath = resolve(dirname(sourcePath), filename);
+
+  try {
+    const gpx = await readFile(filePath, "utf8");
+    const points = parseGpxTrackPoints(gpx);
+    const startPoint = points[0];
+    if (!startPoint) return undefined;
+
+    return {
+      filePath,
+      location: `${startPoint.latitude.toFixed(4)}, ${startPoint.longitude.toFixed(4)}`,
+      startPoint,
+      endPoint: points[points.length - 1]
+    };
+  } catch {
+    return undefined;
+  }
+}
+
+function parseGpxTrackPoints(gpx: string): Array<{ latitude: number; longitude: number }> {
+  const pointPattern = /<trkpt\b[^>]*lat=["']([^"']+)["'][^>]*lon=["']([^"']+)["'][^>]*>/gi;
+  const points: Array<{ latitude: number; longitude: number }> = [];
+  let match: RegExpExecArray | null;
+
+  while ((match = pointPattern.exec(gpx))) {
+    const latitude = Number(match[1]);
+    const longitude = Number(match[2]);
+    if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+      points.push({ latitude, longitude });
+    }
+  }
+
+  return points;
 }
 
 function parseCsv(csv: string): CsvRow[] {
