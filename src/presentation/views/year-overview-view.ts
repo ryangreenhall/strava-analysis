@@ -56,7 +56,7 @@ export function renderYearOverviewPage(overview: YearRunningOverview): string {
         </div>
         ${overview.monthlyDistance.some((entry) => entry.miles > 0) ? `
         <div class="bar-chart monthly-chart" aria-label="Bar chart showing miles run each month in ${overview.year}">
-          ${overview.monthlyDistance.map((entry) => renderMonthlyDistanceBar(entry.month, entry.miles, peakMonth.miles)).join("")}
+          ${overview.monthlyDistance.map((entry) => renderMonthlyDistanceBar(overview.year, entry.month, entry.miles, peakMonth.miles)).join("")}
         </div>
         ` : `
         <p class="empty-copy">No imported runs for ${overview.year}.</p>
@@ -67,15 +67,15 @@ export function renderYearOverviewPage(overview: YearRunningOverview): string {
 </html>`;
 }
 
-function renderMonthlyDistanceBar(month: number, miles: number, maxMiles: number): string {
+function renderMonthlyDistanceBar(year: number, month: number, miles: number, maxMiles: number): string {
   const height = maxMiles > 0 && miles > 0 ? Math.max(3, Math.round((miles / maxMiles) * 100)) : 0;
 
   return `
     <div class="bar-item">
       <div class="bar-value">${miles > 0 ? miles.toFixed(0) : ""}</div>
-      <div class="bar-track">
-        <div class="bar-fill" style="height: ${height}%"></div>
-      </div>
+      <a class="bar-track bar-link" href="/runs/${year}/${month}" aria-label="View ${monthLabels[month - 1]} ${year} running detail">
+        <span class="bar-fill" style="height: ${height}%"></span>
+      </a>
       <div class="bar-label">${monthLabels[month - 1]}</div>
     </div>
   `;

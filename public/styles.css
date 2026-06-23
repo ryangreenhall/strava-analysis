@@ -209,6 +209,20 @@ h1 {
   grid-template-columns: repeat(12, minmax(52px, 1fr));
 }
 
+.daily-chart {
+  grid-template-columns: repeat(auto-fit, minmax(22px, 1fr));
+  gap: 6px;
+}
+
+.daily-bar-item {
+  grid-template-rows: 34px 260px 24px;
+}
+
+.daily-bar-item .bar-value,
+.daily-bar-item .bar-label {
+  font-size: 0.72rem;
+}
+
 @media (max-width: 900px) {
   .summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

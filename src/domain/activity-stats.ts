@@ -47,6 +47,17 @@ export type YearRunningOverview = {
   activityCount: number;
 };
 
+export type MonthRunningOverview = {
+  year: number;
+  month: number;
+  dailyDistance: Array<{
+    day: number;
+    miles: number;
+  }>;
+  totalMilesRun: number;
+  activityCount: number;
+};
+
 export function calculateRunningOverview(activities: Activity[]): RunningOverview {
   const runs = activities.filter((activity) => activity.activityType === "run");
   const longestRun = runs.reduce<Activity | undefined>((current, activity) => {
@@ -126,6 +137,39 @@ export function calculateYearRunningOverview(activities: Activity[], year: numbe
     monthlyDistance,
     totalMilesRun: metersToMiles(totalDistanceMeters),
     activityCount: yearRuns.length
+  };
+}
+
+export function calculateMonthRunningOverview(activities: Activity[], year: number, month: number): MonthRunningOverview {
+  const runs = activities.filter((activity) =>
+    activity.activityType === "run"
+    && activity.startTime.getFullYear() === year
+    && activity.startTime.getMonth() + 1 === month
+  );
+  const dailyDistanceMeters = new Map<number, number>();
+  let totalDistanceMeters = 0;
+
+  for (const activity of runs) {
+    const day = activity.startTime.getDate();
+    dailyDistanceMeters.set(day, (dailyDistanceMeters.get(day) ?? 0) + activity.distanceMeters);
+    totalDistanceMeters += activity.distanceMeters;
+  }
+
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const dailyDistance = Array.from({ length: daysInMonth }, (_, index) => {
+    const day = index + 1;
+    return {
+      day,
+      miles: metersToMiles(dailyDistanceMeters.get(day) ?? 0)
+    };
+  });
+
+  return {
+    year,
+    month,
+    dailyDistance,
+    totalMilesRun: metersToMiles(totalDistanceMeters),
+    activityCount: runs.length
   };
 }
 
