@@ -67,10 +67,12 @@ function renderCalendarDay(day: number, miles: number): string {
       ${hasRun ? `
       <div class="runner-mark" aria-hidden="true">
         <svg viewBox="0 0 28 28" role="img" focusable="false">
-          <circle cx="17" cy="5" r="3"></circle>
-          <path d="M14 10l-4 5 5 2 4-5"></path>
-          <path d="M15 17l4 6"></path>
-          <path d="M15 17l-6 5"></path>
+          <circle cx="16" cy="7" r="3.1"></circle>
+          <path class="runner-body" d="M14.5 9.5c-1.3 1.1-2.4 2.7-3.2 4.8l4.4 2.2 3.8-3.4c.8-.7.9-1.9.2-2.7-.7-.8-1.9-.9-2.7-.2l-1.6 1.4-.9-2.1z"></path>
+          <path d="M15.6 16.4l4.2 6.1"></path>
+          <path d="M15.5 16.5l-5.6 5.1"></path>
+          <path d="M12 13.8l-4.1 1.8"></path>
+          <path d="M18.7 12.9l3.5 1.6"></path>
         </svg>
       </div>
       <div class="calendar-miles">${miles.toFixed(1)} mi</div>

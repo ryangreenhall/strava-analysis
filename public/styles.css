@@ -293,6 +293,11 @@ h1 {
   stroke: none;
 }
 
+.runner-mark .runner-body {
+  fill: currentColor;
+  stroke: none;
+}
+
 .calendar-miles {
   color: var(--ink);
   font-size: 1.15rem;
