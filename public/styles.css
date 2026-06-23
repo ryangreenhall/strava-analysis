@@ -54,6 +54,24 @@ body {
   text-underline-offset: 4px;
 }
 
+.detail-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.detail-nav .back-link {
+  margin-bottom: 0;
+}
+
+.nav-disabled {
+  color: var(--muted);
+  opacity: 0.5;
+  text-decoration: none;
+}
+
 .eyebrow {
   margin: 0 0 10px;
   color: #b33a02;

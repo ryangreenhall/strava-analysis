@@ -18,7 +18,11 @@ export function renderYearOverviewPage(overview: YearRunningOverview): string {
   <body>
     <main class="app-shell">
       <section class="page-head year-head">
-        <a class="back-link" href="/">Overview</a>
+        <nav class="detail-nav" aria-label="Year navigation">
+          ${overview.previousYear ? `<a class="back-link" href="/runs/${overview.previousYear}">Previous: ${overview.previousYear}</a>` : `<span class="back-link nav-disabled">Previous</span>`}
+          <a class="back-link" href="/">Overview</a>
+          ${overview.nextYear ? `<a class="back-link" href="/runs/${overview.nextYear}">Next: ${overview.nextYear}</a>` : `<span class="back-link nav-disabled">Next</span>`}
+        </nav>
         <p class="eyebrow">Year detail</p>
         <h1>${overview.year}</h1>
       </section>

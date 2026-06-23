@@ -32,6 +32,8 @@ export type RunningOverview = {
 
 export type YearRunningOverview = {
   year: number;
+  previousYear?: number;
+  nextYear?: number;
   longestRun?: Activity;
   fastest5k?: EstimatedBestEffort;
   allTimeFastest5k?: EstimatedBestEffort;
@@ -102,6 +104,9 @@ export function calculateRunningOverview(activities: Activity[]): RunningOvervie
 export function calculateYearRunningOverview(activities: Activity[], year: number): YearRunningOverview {
   const allRuns = activities.filter((activity) => activity.activityType === "run");
   const yearRuns = allRuns.filter((activity) => activity.startTime.getFullYear() === year);
+  const availableYears = [...new Set(allRuns.map((activity) => activity.startTime.getFullYear()))].sort((a, b) => a - b);
+  const previousYear = availableYears.filter((availableYear) => availableYear < year).at(-1);
+  const nextYear = availableYears.find((availableYear) => availableYear > year);
   const longestRun = yearRuns.reduce<Activity | undefined>((current, activity) => {
     if (!current || activity.distanceMeters > current.distanceMeters) return activity;
     return current;
@@ -130,6 +135,8 @@ export function calculateYearRunningOverview(activities: Activity[], year: numbe
 
   return {
     year,
+    previousYear,
+    nextYear,
     longestRun,
     fastest5k: findFastestEstimatedEffort(yearRuns, fiveKilometersMeters),
     allTimeFastest5k: findFastestEstimatedEffort(allRuns, fiveKilometersMeters),
