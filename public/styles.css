@@ -40,6 +40,20 @@ body {
   padding-bottom: 28px;
 }
 
+.year-head {
+  min-height: 22vh;
+}
+
+.back-link {
+  width: max-content;
+  margin-bottom: 16px;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 850;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 4px;
+}
+
 .eyebrow {
   margin: 0 0 10px;
   color: #b33a02;
@@ -164,6 +178,18 @@ h1 {
   background: #f4f5ef;
 }
 
+.bar-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.bar-link:hover,
+.bar-link:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+}
+
 .bar-fill {
   position: absolute;
   inset-inline: 0;
@@ -177,6 +203,10 @@ h1 {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
+}
+
+.monthly-chart {
+  grid-template-columns: repeat(12, minmax(52px, 1fr));
 }
 
 @media (max-width: 900px) {

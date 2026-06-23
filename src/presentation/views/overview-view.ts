@@ -82,9 +82,9 @@ function renderAnnualDistanceBar(year: number, miles: number, maxMiles: number):
   return `
     <div class="bar-item">
       <div class="bar-value">${miles.toFixed(0)}</div>
-      <div class="bar-track">
-        <div class="bar-fill" style="height: ${height}%"></div>
-      </div>
+      <a class="bar-track bar-link" href="/runs/${year}" aria-label="View ${year} running detail">
+        <span class="bar-fill" style="height: ${height}%"></span>
+      </a>
       <div class="bar-label">${year}</div>
     </div>
   `;

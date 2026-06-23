@@ -30,6 +30,23 @@ export type RunningOverview = {
   activityCount: number;
 };
 
+export type YearRunningOverview = {
+  year: number;
+  longestRun?: Activity;
+  fastest5k?: EstimatedBestEffort;
+  allTimeFastest5k?: EstimatedBestEffort;
+  mostPopularDay?: {
+    day: string;
+    count: number;
+  };
+  monthlyDistance: Array<{
+    month: number;
+    miles: number;
+  }>;
+  totalMilesRun: number;
+  activityCount: number;
+};
+
 export function calculateRunningOverview(activities: Activity[]): RunningOverview {
   const runs = activities.filter((activity) => activity.activityType === "run");
   const longestRun = runs.reduce<Activity | undefined>((current, activity) => {
@@ -68,6 +85,47 @@ export function calculateRunningOverview(activities: Activity[]): RunningOvervie
     totalMilesRun: metersToMiles(totalDistanceMeters),
     yearsOfActivity: years.size,
     activityCount: runs.length
+  };
+}
+
+export function calculateYearRunningOverview(activities: Activity[], year: number): YearRunningOverview {
+  const allRuns = activities.filter((activity) => activity.activityType === "run");
+  const yearRuns = allRuns.filter((activity) => activity.startTime.getFullYear() === year);
+  const longestRun = yearRuns.reduce<Activity | undefined>((current, activity) => {
+    if (!current || activity.distanceMeters > current.distanceMeters) return activity;
+    return current;
+  }, undefined);
+
+  const dayCounts = new Map<number, number>();
+  const monthlyDistanceMeters = new Map<number, number>();
+  let totalDistanceMeters = 0;
+
+  for (const activity of yearRuns) {
+    const day = activity.startTime.getDay();
+    const month = activity.startTime.getMonth() + 1;
+    dayCounts.set(day, (dayCounts.get(day) ?? 0) + 1);
+    monthlyDistanceMeters.set(month, (monthlyDistanceMeters.get(month) ?? 0) + activity.distanceMeters);
+    totalDistanceMeters += activity.distanceMeters;
+  }
+
+  const popularDayEntry = [...dayCounts.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];
+  const monthlyDistance = Array.from({ length: 12 }, (_, index) => {
+    const month = index + 1;
+    return {
+      month,
+      miles: metersToMiles(monthlyDistanceMeters.get(month) ?? 0)
+    };
+  });
+
+  return {
+    year,
+    longestRun,
+    fastest5k: findFastestEstimatedEffort(yearRuns, fiveKilometersMeters),
+    allTimeFastest5k: findFastestEstimatedEffort(allRuns, fiveKilometersMeters),
+    mostPopularDay: popularDayEntry ? { day: weekdays[popularDayEntry[0]], count: popularDayEntry[1] } : undefined,
+    monthlyDistance,
+    totalMilesRun: metersToMiles(totalDistanceMeters),
+    activityCount: yearRuns.length
   };
 }
 
