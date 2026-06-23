@@ -1,9 +1,9 @@
 import type { MonthRunningOverview } from "../../domain/activity-stats.ts";
 
 const monthLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const weekdayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export function renderMonthOverviewPage(overview: MonthRunningOverview): string {
-  const peakDay = overview.dailyDistance.reduce((best, current) => current.miles > best.miles ? current : best, { day: 0, miles: 0 });
   const monthName = monthLabels[overview.month - 1] ?? `Month ${overview.month}`;
 
   return `<!doctype html>
@@ -32,12 +32,13 @@ export function renderMonthOverviewPage(overview: MonthRunningOverview): string 
 
       <section class="chart-panel" aria-labelledby="daily-distance-title">
         <div class="section-heading">
-          <p class="eyebrow">Daily distance</p>
-          <h2 id="daily-distance-title">Miles run each day</h2>
+          <p class="eyebrow">Training calendar</p>
+          <h2 id="daily-distance-title">Runs by day</h2>
         </div>
         ${overview.dailyDistance.some((entry) => entry.miles > 0) ? `
-        <div class="bar-chart daily-chart" aria-label="Bar chart showing miles run each day in ${monthName} ${overview.year}">
-          ${overview.dailyDistance.map((entry) => renderDailyDistanceBar(entry.day, entry.miles, peakDay.miles)).join("")}
+        <div class="calendar-grid" aria-label="Calendar showing miles run each day in ${monthName} ${overview.year}">
+          ${weekdayLabels.map((label) => `<div class="weekday-heading">${label}</div>`).join("")}
+          ${renderCalendarCells(overview)}
         </div>
         ` : `
         <p class="empty-copy">No imported runs for ${monthName} ${overview.year}.</p>
@@ -48,16 +49,33 @@ export function renderMonthOverviewPage(overview: MonthRunningOverview): string 
 </html>`;
 }
 
-function renderDailyDistanceBar(day: number, miles: number, maxMiles: number): string {
-  const height = maxMiles > 0 && miles > 0 ? Math.max(3, Math.round((miles / maxMiles) * 100)) : 0;
+function renderCalendarCells(overview: MonthRunningOverview): string {
+  const firstDay = new Date(overview.year, overview.month - 1, 1);
+  const mondayStartOffset = (firstDay.getDay() + 6) % 7;
+  const leadingDays = Array.from({ length: mondayStartOffset }, () => `<div class="calendar-day calendar-day-empty"></div>`);
+  const activeDays = overview.dailyDistance.map((entry) => renderCalendarDay(entry.day, entry.miles));
+
+  return [...leadingDays, ...activeDays].join("");
+}
+
+function renderCalendarDay(day: number, miles: number): string {
+  const hasRun = miles > 0;
 
   return `
-    <div class="bar-item daily-bar-item">
-      <div class="bar-value">${miles > 0 ? miles.toFixed(1) : ""}</div>
-      <div class="bar-track">
-        <div class="bar-fill" style="height: ${height}%"></div>
+    <div class="calendar-day${hasRun ? " calendar-day-run" : ""}">
+      <div class="calendar-date">${day}</div>
+      ${hasRun ? `
+      <div class="runner-mark" aria-hidden="true">
+        <svg viewBox="0 0 28 28" role="img" focusable="false">
+          <circle cx="17" cy="5" r="3"></circle>
+          <path d="M14 9l-4 5 5 2 3 7"></path>
+          <path d="M14 9l5 4 4-1"></path>
+          <path d="M10 14l-4 7"></path>
+          <path d="M15 16l-5 7"></path>
+        </svg>
       </div>
-      <div class="bar-label">${day}</div>
+      <div class="calendar-miles">${miles.toFixed(1)} mi</div>
+      ` : ""}
     </div>
   `;
 }

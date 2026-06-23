@@ -130,6 +130,7 @@ h1 {
 .chart-panel {
   margin-top: 18px;
   padding: 22px;
+  overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.94);
@@ -223,6 +224,82 @@ h1 {
   font-size: 0.72rem;
 }
 
+.calendar-grid {
+  min-width: 680px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.weekday-heading {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.calendar-day {
+  min-height: 126px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #e2e5df;
+  border-radius: 8px;
+  background: #f7f8f3;
+}
+
+.calendar-day-empty {
+  visibility: hidden;
+}
+
+.calendar-day-run {
+  border-color: #ffcbb7;
+  background: #fff7f1;
+}
+
+.calendar-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 850;
+}
+
+.runner-mark {
+  align-self: center;
+  justify-self: center;
+  width: 34px;
+  height: 34px;
+  color: var(--accent);
+}
+
+.runner-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.runner-mark circle,
+.runner-mark path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+}
+
+.runner-mark circle {
+  fill: currentColor;
+  stroke: none;
+}
+
+.calendar-miles {
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
 @media (max-width: 900px) {
   .summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -253,5 +330,24 @@ h1 {
     display: grid;
     grid-template-columns: 1fr;
     grid-column: auto;
+  }
+
+  .calendar-grid {
+    gap: 6px;
+    min-width: 620px;
+  }
+
+  .calendar-day {
+    min-height: 96px;
+    padding: 8px;
+  }
+
+  .runner-mark {
+    width: 26px;
+    height: 26px;
+  }
+
+  .calendar-miles {
+    font-size: 0.84rem;
   }
 }
