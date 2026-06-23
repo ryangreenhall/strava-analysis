@@ -68,10 +68,9 @@ function renderCalendarDay(day: number, miles: number): string {
       <div class="runner-mark" aria-hidden="true">
         <svg viewBox="0 0 28 28" role="img" focusable="false">
           <circle cx="17" cy="5" r="3"></circle>
-          <path d="M14 9l-4 5 5 2 3 7"></path>
-          <path d="M14 9l5 4 4-1"></path>
-          <path d="M10 14l-4 7"></path>
-          <path d="M15 16l-5 7"></path>
+          <path d="M14 10l-4 5 5 2 4-5"></path>
+          <path d="M15 17l4 6"></path>
+          <path d="M15 17l-6 5"></path>
         </svg>
       </div>
       <div class="calendar-miles">${miles.toFixed(1)} mi</div>
