@@ -54,11 +54,15 @@ body {
   text-underline-offset: 4px;
 }
 
-.detail-nav {
+.detail-nav,
+.year-title-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
   align-items: center;
+}
+
+.detail-nav {
+  gap: 14px;
   margin-bottom: 16px;
 }
 
@@ -70,6 +74,23 @@ body {
   color: var(--muted);
   opacity: 0.5;
   text-decoration: none;
+}
+
+.year-title-row {
+  gap: clamp(16px, 3vw, 28px);
+}
+
+.year-title-row h1 {
+  max-width: none;
+}
+
+.year-nav-link {
+  color: var(--ink);
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  font-weight: 850;
+  line-height: 0.9;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 8px;
 }
 
 .eyebrow {

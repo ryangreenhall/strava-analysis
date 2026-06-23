@@ -18,13 +18,13 @@ export function renderYearOverviewPage(overview: YearRunningOverview): string {
   <body>
     <main class="app-shell">
       <section class="page-head year-head">
-        <nav class="detail-nav" aria-label="Year navigation">
-          ${overview.previousYear ? `<a class="back-link" href="/runs/${overview.previousYear}">Previous: ${overview.previousYear}</a>` : `<span class="back-link nav-disabled">Previous</span>`}
-          <a class="back-link" href="/">Overview</a>
-          ${overview.nextYear ? `<a class="back-link" href="/runs/${overview.nextYear}">Next: ${overview.nextYear}</a>` : `<span class="back-link nav-disabled">Next</span>`}
-        </nav>
+        <a class="back-link" href="/">Overview</a>
         <p class="eyebrow">Year detail</p>
-        <h1>${overview.year}</h1>
+        <div class="year-title-row" aria-label="Year navigation">
+          ${overview.previousYear ? `<a class="year-nav-link" href="/runs/${overview.previousYear}" aria-label="Previous year ${overview.previousYear}">&lt;</a>` : `<span class="year-nav-link nav-disabled" aria-label="No previous year">&lt;</span>`}
+          <h1>${overview.year}</h1>
+          ${overview.nextYear ? `<a class="year-nav-link" href="/runs/${overview.nextYear}" aria-label="Next year ${overview.nextYear}">&gt;</a>` : `<span class="year-nav-link nav-disabled" aria-label="No next year">&gt;</span>`}
+        </div>
       </section>
 
       <section class="summary-grid" aria-label="${overview.year} running summary">
