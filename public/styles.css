@@ -196,7 +196,7 @@ h1 {
   bottom: 0;
   min-height: 4px;
   border-radius: 7px 7px 0 0;
-  background: linear-gradient(180deg, var(--accent) 0%, #c13b05 100%);
+  background: var(--accent);
 }
 
 .empty-copy {
